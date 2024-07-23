@@ -17,10 +17,10 @@ class Player(PlayerBase):
             selected_ship = next((ship for ship in self.availableShips if ship.return_name().lower() == user_input.lower()), None)
             if selected_ship:
                 print(f"You selected {selected_ship.return_name()} with size {selected_ship.return_size()}.")
-                quard = input(f"Where would you like to place the ship? (format: row,col)").strip()
+                coord = input(f"Where would you like to place the ship? (format: row,col)").strip()
                 response = input(f"Would you like the ship horizontal or vertical? (h/v)").strip()
                 res = response.lower() == "h"
-                start_row, start_col = map(int, quard.split(","))
+                start_row, start_col = map(int, coord.split(","))
                 if self.check_move(selected_ship, start_row, start_col, res):
                     self.place_ship(selected_ship, start_row, start_col, res)
                     self.board.print_board()  
@@ -31,3 +31,6 @@ class Player(PlayerBase):
             else:
                 print("Invalid ship name. Please try again.")
         return
+
+       
+

@@ -4,6 +4,10 @@ from player_base import PlayerBase
 class Computer(PlayerBase):
     def __init__(self, size=10):
         super().__init__(size)
+        self.hits = []
+        
+    def return_hits(self):
+        return self.hits
     
     def random_arrange(self):
         while self.availableShips:
@@ -13,6 +17,7 @@ class Computer(PlayerBase):
             horizontal = random.choice([True, False])
             if self.check_move(selected_ship, row, col, horizontal):
                 self.place_ship(selected_ship, row, col, horizontal)
-                print(f"placed: {selected_ship.name}")
                 self.availableShips.remove(selected_ship)
-                self.board.print_board()
+                
+    
+        

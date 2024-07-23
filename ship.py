@@ -9,3 +9,6 @@ class Ship:
         
     def return_size(self):
         return self.size
+
+    def return_positions(self):
+        return self.positions
