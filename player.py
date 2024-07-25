@@ -1,7 +1,7 @@
 from player_base import PlayerBase
 
 class Player(PlayerBase):
-    def __init__(self, size=10):
+    def __init__(self, size=8):
         super().__init__(size)
     
     def board_set_up(self):

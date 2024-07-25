@@ -3,13 +3,14 @@ from player import Player
 from computer import Computer
 
 class Game:
-    def __init__(self, size=10):
+    def __init__(self, size=8):
         self.player = Player(size)
         self.computer = Computer(size)
         self.size = size
     
     def start(self):
         print("Starting game...")
+        self.player.board.print_board()
         self.player.board_set_up()
         self.computer.random_arrange()
     
@@ -20,11 +21,6 @@ class Game:
         self.player.hits_board.print_board()
 
     def player_move(self):
-        print("com len: ", len(self.computer.ships))
-        print("comp ship: ")
-        for ship in self.computer.ships:
-            print(f"{ship.name}: {ship.positions}")
-
         while True:
             coord = input("Where would you like to attack? (format: row,col): ").strip()
             try:
@@ -33,8 +29,8 @@ class Game:
                 print("Invalid format. Please enter the coordinates in the format row,col (e.g., 3,4).")
                 continue
 
-            if not (0 <= row <= 9 and 0 <= col <= 9):
-                print("Coordinates out of bounds. Please enter values between 0 and 9.")
+            if not (0 <= row <= 7 and 0 <= col <= 7):
+                print("Coordinates out of bounds. Please enter values between 0 and 7.")
                 continue
 
             if self.player.hits_board.board[row][col] != "-":
@@ -68,8 +64,8 @@ class Game:
             if hits_len == 0:
                 # Random move
                 while True:
-                    row = random.randint(0, 9)
-                    col = random.randint(0, 9)
+                    row = random.randint(0, 7)
+                    col = random.randint(0, 7)
                     if self.computer.hits_board.board[row][col] == "-":
                         break
 
@@ -110,7 +106,7 @@ class Game:
                     else:
                         col += 1
 
-                    if 0 <= row <= 9 and 0 <= col <= 9 and self.computer.hits_board.board[row][col] == "-":
+                    if 0 <= row <= 7 and 0 <= col <= 7 and self.computer.hits_board.board[row][col] == "-":
                         break
 
                 hit = False
@@ -157,7 +153,7 @@ class Game:
                         row, col = last_hit[0] - 1, last_hit[1]
                         direction = "u"
 
-                if not (0 <= row <= 9 and 0 <= col <= 9) or self.computer.hits_board.board[row][col] != "-":
+                if not (0 <= row <= 7 and 0 <= col <= 7) or self.computer.hits_board.board[row][col] != "-":
                     # Reverse direction if boundary is reached or spot is already hit
                     if direction == "u":
                         row, col = first_hit[0] + 1, first_hit[1]
@@ -168,7 +164,7 @@ class Game:
                     else:
                         row, col = first_hit[0], first_hit[1] - 1
 
-                if 0 <= row <= 9 and 0 <= col <= 9 and self.computer.hits_board.board[row][col] == "-":
+                if 0 <= row <= 7 and 0 <= col <= 7 and self.computer.hits_board.board[row][col] == "-":
                     hit = False
                     for ship in self.player.ships:
                         if (row, col) in ship.positions:
