@@ -13,5 +13,8 @@ class Board:
         return board    
     
     def print_board(self):
-        for row in self.board:
-            print(" ".join(row))
+        header = '  ' + ' '.join('ABCDEFGH'[:self.size])
+        print(header)
+        
+        for i, row in enumerate(self.board):
+            print(f"{i} {' '.join(row)}")

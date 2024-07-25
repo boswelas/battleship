@@ -1,4 +1,5 @@
 import random
+from time import sleep
 from player import Player
 from computer import Computer
 
@@ -10,27 +11,30 @@ class Game:
     
     def start(self):
         print("Starting game...")
+        print()
         self.player.board.print_board()
         self.player.board_set_up()
         self.computer.random_arrange()
     
-    def print_boards(self):
-        print("Player's board:")
-        self.player.board.print_board()
-        print("Computer's board:")
-        self.player.hits_board.print_board()
 
     def player_move(self):
+        print()
         while True:
-            coord = input("Where would you like to attack? (format: row,col): ").strip()
-            try:
-                row, col = map(int, coord.split(","))
-            except ValueError:
-                print("Invalid format. Please enter the coordinates in the format row,col (e.g., 3,4).")
+            sleep(1)
+            print("Here's your opponent's board:")
+            self.player.hits_board.print_board()
+            coord = input("Where would you like to attack? (format: letter+number, e.g., a0): ").strip().lower()
+            print()
+            if len(coord) != 2 or not coord[0].isalpha() or not coord[1].isdigit():
+                print("Invalid format. Please enter the coordinates in the format letter+number (e.g., a0).")
                 continue
-
-            if not (0 <= row <= 7 and 0 <= col <= 7):
-                print("Coordinates out of bounds. Please enter values between 0 and 7.")
+            
+            col, row = coord[0], coord[1]
+            col = ord(col) - ord('a')
+            row = int(row)
+            
+            if not (0 <= row < self.size and 0 <= col < self.size):
+                print("Coordinates out of bounds. Please enter values between A-H and 0-7.")
                 continue
 
             if self.player.hits_board.board[row][col] != "-":
@@ -47,15 +51,19 @@ class Game:
                     if len(ship.positions) == 0:
                         print(ship.name, "has been sank!")
                         self.computer.ships.remove(ship)
+                    self.player.hits_board.print_board()
                     break
 
             if not hit:
                 print("Miss!")
                 self.player.place_miss(row, col)
-
+                self.player.hits_board.print_board()
             return
+
     
     def computer_move(self):
+        print()
+        sleep(1)
         hits = self.computer.return_hits()
         hits_len = len(hits)
         inTurn = True
@@ -72,7 +80,7 @@ class Game:
                 hit = False
                 for ship in self.player.ships:
                     if (row, col) in ship.positions:
-                        print("It's a hit!")
+                        print("The computer made a hit!")
                         self.computer.place_hit(row, col)
                         hit = True
                         self.computer.add_to_hits(row, col, ship.name)
@@ -83,11 +91,14 @@ class Game:
                             self.player.ships.remove(ship)
                             # Remove hits of the sunk ship
                             self.computer.hits = [h for h in self.computer.hits if h[2] != ship.name]
+                        self.player.board.print_board()
                         inTurn = False
 
                 if not hit:
-                    print("Miss!")
+                    print("The computer missed!")
                     self.computer.place_miss(row, col)
+                    self.player.board.print_board()
+
                 return
 
             elif hits_len == 1:
@@ -112,23 +123,26 @@ class Game:
                 hit = False
                 for ship in self.player.ships:
                     if (row, col) in ship.positions:
-                        print("It's a hit!")
+                        print("The computer made a hit!")
                         self.computer.place_hit(row, col)
                         hit = True
                         self.computer.add_to_hits(row, col, ship.name)
                         ship.positions.remove((row, col))
                         self.player.board.board[row][col] = "H"
+                        
 
                         if len(ship.positions) == 0:
                             print(ship.name, "has been sank!")
                             self.player.ships.remove(ship)
                             # Remove hits of the sunk ship
                             self.computer.hits = [h for h in self.computer.hits if h[2] != ship.name]
+                        self.player.board.print_board()
                         inTurn = False
 
                 if not hit:
-                    print("Miss!")
+                    print("The computer missed!")
                     self.computer.place_miss(row, col)
+                    self.player.board.print_board()
                 return
 
             else:
@@ -168,7 +182,7 @@ class Game:
                     hit = False
                     for ship in self.player.ships:
                         if (row, col) in ship.positions:
-                            print("It's a hit!")
+                            print("The computer made a hit!")
                             self.computer.place_hit(row, col)
                             hit = True
                             self.computer.add_to_hits(row, col, ship.name)
@@ -180,11 +194,13 @@ class Game:
                                 self.player.ships.remove(ship)
                                 # Remove hits of the sunk ship
                                 self.computer.hits = [h for h in self.computer.hits if h[2] != ship.name]
+                            self.player.board.print_board()
                             inTurn = False
 
                     if not hit:
-                        print("Miss!")
+                        print("The computer missed!")
                         self.computer.place_miss(row, col)
+                        self.player.board.print_board()
                     return
             
     def play_game(self):
@@ -192,7 +208,6 @@ class Game:
         while len(self.computer.ships) > 0 and len(self.player.ships) > 0:
             self.player_move()
             self.computer_move()
-            self.print_boards()
         
         if self.player.ships:
             return print(f"Player wins!")
