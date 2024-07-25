@@ -5,10 +5,13 @@ class Computer(PlayerBase):
     def __init__(self, size=10):
         super().__init__(size)
         self.hits = []
-        
+
     def return_hits(self):
         return self.hits
-    
+
+    def add_to_hits(self, row, col, ship_id):
+        self.hits.append((row, col, ship_id))
+
     def random_arrange(self):
         while self.availableShips:
             selected_ship = random.choice(self.availableShips)
@@ -18,6 +21,3 @@ class Computer(PlayerBase):
             if self.check_move(selected_ship, row, col, horizontal):
                 self.place_ship(selected_ship, row, col, horizontal)
                 self.availableShips.remove(selected_ship)
-                
-    
-        
